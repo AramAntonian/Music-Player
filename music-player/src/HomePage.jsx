@@ -21,8 +21,8 @@ function HomePage () {
             isPlaying: false
         },
         {
-            songName: 'Until I found you',
-            artistName: 'Stephen Sanchez',
+            songName: 'Antil I found you',
+            artistName: 'Atephen Sanchez',
             trackNumber: 5,
             file: song,
             isPlaying: false
@@ -49,16 +49,34 @@ function HomePage () {
         if(!filterValue.length){
             return true
         }
-        if( sortBy === 'Track Number' ) {
-            return el.trackNumber === +filterValue
-        } else if( sortBy === 'Song Name' ){
-            return el.songName.includes(filterValue)
-        } else{
-            return el.artistName.includes(filterValue)
-        } 
-
+        return el.trackNumber === +filterValue ||  el.songName.includes(filterValue) ||  el.artistName.includes(filterValue)
+    
     }
 
+    useEffect(() => {
+        switch (sortBy) {
+            case 'Track Number':
+                setSongs(prev => {
+                    prev.sort((a, b) => a.trackNumber - b.trackNumber)
+                    return [...prev]
+                }
+                )
+                break;
+            case 'Artist Name':
+                setSongs(prev => {
+                    prev.sort((a, b) => a.artistName.localeCompare(b.artistName))
+                    return [...prev]
+                }
+                )
+                break;
+            default:
+                setSongs(prev => {
+                    prev.sort((a, b) => a.songName.localeCompare(b.songName))
+                    return [...prev]
+                }
+                )
+        }
+    }, [sortBy])
 
     //adding all music to queu
     function addMusic (song) {
@@ -67,7 +85,7 @@ function HomePage () {
             {
                 songName: 'unknown',
                 artistName: 'unknown',
-                trackNumber: Math.round(Math.random() * 100),
+                trackNumber: +Math.round(Math.random() * 100),
                 file: song,
                 isPlaying: true
             })

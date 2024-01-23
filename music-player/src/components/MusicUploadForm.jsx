@@ -1,9 +1,11 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import '../index.css'
 
 function MusicUploadForm ({ addMusic }) {
-    const inputRef = useRef(null)
+    const [openLoading, setOpenLoading] = useState(false)
+    const inputRef = useRef(null) 
 
-    function onClick (e) {
+    function handleFileChoosing (e) {
       const reader = new FileReader()
         reader.onload = (event) => {
           if(event.target){
@@ -12,18 +14,44 @@ function MusicUploadForm ({ addMusic }) {
           
           }
           reader.readAsDataURL(e.target.files[0])
+          setOpenLoading(false)
     }
-    
+
+
     return (
         <>
+        {
+          openLoading ?
+        <div style = {{
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          background: 'black',
+          opacity: 0.5,
+          top: 0,
+          left: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 2
+        }}
+        >
+          <div className="loader">
+            a
+          </div>
+        </div>
+        :null
+        }
         <div 
         style={{
           cursor: 'pointer',
           textDecoration: 'underline',
           width: 'fit-content'
         }}
-        onClick = {() => 
-            inputRef.current.click()
+        onClick = {() => {
+          setOpenLoading(true)
+          inputRef.current.click()
+        }
         }>Upload your music</div>
         <div style = {{
             display: 'none'
@@ -31,8 +59,8 @@ function MusicUploadForm ({ addMusic }) {
         <input 
           type = 'file' 
           ref = {inputRef}  
-          placeholder = 'hello' 
-          onChange = {onClick}
+          placeholder = 'hello'
+          onChange = {handleFileChoosing}
           accept = '.mp3,.wav'
         />
         </div>
